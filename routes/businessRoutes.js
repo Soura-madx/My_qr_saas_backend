@@ -1,15 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const Business = require('../models/Business');
+const Admin = require('../models/Admin'); // Admin model import kiya
+const verifyToken = require('../middleware/auth'); // Auth middleware import kiya
 
-// Create a new business (Abhi Postman ya ThunderClient se dummy data dalne ke liye)
-router.post('/add', async (req, res) => {
+// Create a new business & link to Admin
+router.post('/', verifyToken, async (req, res) => {
   try {
     const newBusiness = new Business(req.body);
     const savedBusiness = await newBusiness.save();
-    res.status(201).json(savedBusiness);
+    
+    // Logged-in admin ke record mein businessId save karna
+    await Admin.findByIdAndUpdate(req.user.id, { businessId: savedBusiness._id });
+    
+    res.status(201).json({ success: true, business: savedBusiness, message: 'Business linked successfully!' });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 });
 
