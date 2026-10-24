@@ -6,13 +6,8 @@ const businessSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   whatsappNumber: { type: String },
   instagramHandle: { type: String },
-  googleReviewLink: {type: String},
-  website: { type: String },
-  reviews: [{
-    rating: { type: Number, required: true },
-    feedbackText: { type: String },
-    createdAt: { type: Date, default: Date.now }
-  }]
+  googleReviewLink: { type: String },
+  website: { type: String }
 });
 
 module.exports = mongoose.model('Business', businessSchema);
